@@ -3,15 +3,34 @@ package com.example.viewmodel_and_livedata;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DataVM extends ViewModel {
     AddTask myTask;
 
-    // Create LiveData
+//    // Create LiveData
+//    private MutableLiveData<List<String>> fruitList;
+//    LiveData<List<String>> getFruitList() {
+//        if (fruitList == null) {
+//            fruitList = new MutableLiveData<>();
+//            loadFruits();
+//        }
+//        return fruitList;
+//    }
+//    private void loadFruits() {
+//        // do async operation to fetch users
+//        List<String> fruitsStringList = new ArrayList<>();
+//        fruitsStringList.add("Mango");
+//        fruitsStringList.add("Apple");
+//        fruitsStringList.add("Orange");
+//        fruitList.setValue(fruitsStringList);
+//    }
+
     private MutableLiveData<String> etText;
     public MutableLiveData<String> getCurrentText() {
         if (etText == null) {
@@ -43,21 +62,9 @@ public class DataVM extends ViewModel {
             myTask.cancel(true);
     }
 
-    /*
-   If the following class is non static then it will have a hidden reference to its
-   parent, MainActivity.  If the device is rotated while the following
-   thread is running then this reference will keep the garbage collector from
-   collecting the parent activity.  If the thread runs long enough and the
-   device keeps rotating, its memory footprint grows and grows.
-   If its static then no hidden reference, so no memory problems, but its harder to
-   manipulate activity UI.
-    */
-    public class AddTask extends AsyncTask<Integer,Integer,String> {
-        // if an object can only be reached by a weak reference then its
-        // eligible for garbage collection.  So on a confgurationchanged
-        // event when the activity is destroyed, it can be GCed even
-        // though ma has a weak reference to it
-         /**
+
+       public class AddTask extends AsyncTask<Integer,Integer,String> {
+          /**
          * @param integers varargs- array of ints passed in
          * @return
          */
@@ -84,10 +91,7 @@ public class DataVM extends ViewModel {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-//            //set the UI
-//            if (ma.get()!=null) {
-//                ma.get().setUIState(false, "Launching async task...");
-//            }
+
             etText.setValue("Launching async task...");
             butState.setValue(false);
         }
@@ -97,9 +101,6 @@ public class DataVM extends ViewModel {
             super.onProgressUpdate(values);
             Integer progress = values[0] * 1;
 
-            //set the UI
-//            if (ma.get() !=null)
-//                ma.get().pBar.setProgress(progress);
             pbProgress.setValue(progress);
         }
 
@@ -108,10 +109,6 @@ public class DataVM extends ViewModel {
             //occurs in main thread, called upon completion of doInBackground
             super.onPostExecute(retval);
 
-//            //set the UI
-//            if (ma.get()!=null) {
-//                ma.get().setUIState(true, retval);
-//            }
             etText.setValue(retval);
             butState.setValue(true);
         }
@@ -121,10 +118,6 @@ public class DataVM extends ViewModel {
             //occurs in main thread, called upon completion of doInBackground
             super.onCancelled();
 
-//            //set the UI
-//            if (ma.get()!=null) {
-//                ma.get().setUIState(true, retval);
-//            }
             etText.setValue(retval);
             butState.setValue(true);
             pbProgress.setValue(0);

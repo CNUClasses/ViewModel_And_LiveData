@@ -35,5 +35,4 @@ dependencies {
     def arch_version = "2.1.0"
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
-
 }

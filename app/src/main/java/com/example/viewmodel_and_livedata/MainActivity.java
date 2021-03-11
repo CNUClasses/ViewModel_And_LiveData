@@ -2,10 +2,14 @@ package com.example.viewmodel_and_livedata;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -13,7 +17,13 @@ import android.widget.TextView;
 
 import com.example.viewmodel_and_livedata.DataVM;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG="MainActivity";
     private static final int P_BAR_MAX = 100;
     private Integer myInt=100;
     private TextView tv;
@@ -23,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     //persists accross config changes
     DataVM myVM;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,13 +49,6 @@ public class MainActivity extends AppCompatActivity {
         // onCreate() method.  Re-created activities receive the same
         // MyViewModel instance created by the first activity.
         myVM = new ViewModelProvider(this).get(DataVM.class);
-        //if we have a thread running then attach this activity
-//        if (myVM.myTask != null) {
-//            myVM.myTask.set(new WeakReference<MainActivity>(this));
-
-        //a thread is running have the UI show that
-//            setUIState(false);
-//    }
 
         // Create the observer which updates the UI.
         final Observer<String> textObserver = new Observer<String>() {
@@ -54,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
                 tv.setText(newText);
             }
         };
-
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
         myVM.getCurrentText().observe(this, textObserver);
 
@@ -80,6 +83,18 @@ public class MainActivity extends AppCompatActivity {
         };
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
         myVM.getCurrentbutState().observe(this, pbutObserver);
+
+//        // Create the observer which updates the UI.
+//        final Observer<List<String>> plistObserver = new Observer<List<String>>() {
+//            @Override
+//            public void onChanged(@Nullable final List<String> newlst) {
+//                // Update the UI, in this case, a TextView.
+//                Log.d(TAG, "onChanged: ");
+//            }
+//        };
+//        // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
+//        myVM.getFruitList().observe(this, plistObserver);
+
     }
 
     public void doCancel(View view) {
